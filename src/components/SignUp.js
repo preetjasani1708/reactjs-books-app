@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 const axios = require('axios');
 
 const SignUp = () => {
@@ -72,7 +73,12 @@ const SignUp = () => {
             <div>
                 <button onClick={addInput}
                     disabled={!isValid}
-                >Save</button>
+                >Sign Up</button>
+            </div>
+            <div>Already have account ? {' '}
+                <Link to='/login'>
+                    SignIn
+                </Link>
             </div>
         </div>
     );
