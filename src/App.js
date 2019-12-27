@@ -5,6 +5,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import PrivateRoute from './components/PrivateRoute';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import Books from './components/Books';
@@ -21,12 +22,12 @@ function App() {
           <Route path='/login' exact>
             <SignIn />
           </Route>
-          <Route path='/books' exact>
+          <PrivateRoute path='/books' exact>
             <Books />
-          </Route>
-          <Route path='/books/create' exact>
+          </PrivateRoute>
+          <PrivateRoute path='/books/create' exact>
             <BooksCreate />
-          </Route>
+          </PrivateRoute>
         </Switch>
       </Router>
     </div>
