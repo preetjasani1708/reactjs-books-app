@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 const verifyToken = (token) => {
     try {
         const decode = jwt.verify(token, process.env.REACT_APP_JWT_SECRET)
-        console.log(decode);
         if (decode.username && decode.exp && decode._id
             && decode.exp > Math.floor(Date.now() / 1000)) {
             return true;
