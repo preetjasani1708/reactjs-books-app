@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ButtonAppBar from './custom/AppBar';
 const axios = require('axios');
 
 const SignUp = () => {
@@ -58,37 +59,39 @@ const SignUp = () => {
 
     return (
         <div>
-            <div style={{
-                color: apiResult ? apiResult.success ?
-                    '#00FF00' : '#FF0000' : '#000000'
-            }}>
-                {apiResult ? apiResult.message : ''}
-            </div>
-            <div>Sign Up</div>
-            <div>Username :
+            <ButtonAppBar>
+                <div style={{
+                    color: apiResult ? apiResult.success ?
+                        '#00FF00' : '#FF0000' : '#000000'
+                }}>
+                    {apiResult ? apiResult.message : ''}
+                </div>
+                <div>Sign Up</div>
+                <div>Username :
         <input type='text'
-                    name='username'
-                    value={inputs.username}
-                    placeholder='Enter Username'
-                    onChange={onHandleInput} />
-            </div>
-            <div>Password :
+                        name='username'
+                        value={inputs.username}
+                        placeholder='Enter Username'
+                        onChange={onHandleInput} />
+                </div>
+                <div>Password :
     <input type='password'
-                    name='password'
-                    value={inputs.password}
-                    placeholder='Password'
-                    onChange={onHandleInput} />
-            </div>
-            <div>
-                <button onClick={addInput}
-                    disabled={!isValid}
-                >Sign Up</button>
-            </div>
-            <div>Already have account ? {' '}
-                <Link to='/login'>
-                    SignIn
+                        name='password'
+                        value={inputs.password}
+                        placeholder='Password'
+                        onChange={onHandleInput} />
+                </div>
+                <div>
+                    <button onClick={addInput}
+                        disabled={!isValid}
+                    >Sign Up</button>
+                </div>
+                <div>Already have account ? {' '}
+                    <Link to='/login'>
+                        SignIn
                 </Link>
-            </div>
+                </div>
+            </ButtonAppBar>
         </div>
     );
 }

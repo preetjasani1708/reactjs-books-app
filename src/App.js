@@ -14,22 +14,24 @@ import BooksCreate from './components/BooksCreate';
 function App() {
   return (
     <div className="App">
-      <Router>
-        <Switch>
-          <Route path='/register'>
-            <SignUp />
-          </Route>
-          <Route path='/login' exact>
-            <SignIn />
-          </Route>
-          <PrivateRoute path='/books' exact>
-            <Books />
-          </PrivateRoute>
-          <PrivateRoute path='/books/create' exact>
-            <BooksCreate />
-          </PrivateRoute>
-        </Switch>
-      </Router>
+      <div>
+        <Router>
+          <Switch>
+            <Route path='/register'>
+              <SignUp />
+            </Route>
+            <Route path='/login' exact>
+              <SignIn />
+            </Route>
+            <PrivateRoute path='/books' exact>
+              <Books />
+            </PrivateRoute>
+            <PrivateRoute path='/books/create' exact>
+              <BooksCreate />
+            </PrivateRoute>
+          </Switch>
+        </Router>
+      </div>
     </div>
   );
 }
