@@ -34,17 +34,26 @@ const SignUp = () => {
     }
 
     const addInput = async () => {
-        if (inputs.username && inputs.password) {
-            let result =
-                await axios.post('http://localhost:3000/api/signup', inputs);
-            if (result.data) {
-                setApiResult({
-                    success: result.data.success,
-                    message: result.data.msg
-                })
+        try {
+            if (inputs.username && inputs.password) {
+                let result =
+                    await axios.post('http://localhost:3000/api/signup', inputs);
+                if (result.data) {
+                    setApiResult({
+                        success: result.data.success,
+                        message: result.data.msg
+                    })
+                    setInputs(initnialState);
+                }
             }
-            setInputs(initnialState);
+        } catch (error) {
+            setApiResult({
+                success: false,
+                message: 'Invalid Inputs'
+            })
+            setInputs(initnialState)
         }
+
     }
 
     return (

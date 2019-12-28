@@ -59,7 +59,6 @@ const SignIn = (props) => {
                     setSession('token', result.data.token)
                     props.fireUserLogin(inputs.username, result.data.token)
                 }
-                console.log(sessionStorage)
             }
         } catch (error) {
             setApiResult({
