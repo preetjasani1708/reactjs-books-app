@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getSession } from '../helpers/sessionHelper';
+const axios = require('axios');
 
 const BooksCreate = () => {
 
@@ -11,6 +13,7 @@ const BooksCreate = () => {
     }
     const [inputs, setInputs] = useState(initialState)
     const [isValidInputs, setIsValidInputs] = useState(false)
+    const [apiResult, setApiResult] = useState(null)
 
     //Component Did Update
     useEffect(
@@ -34,8 +37,42 @@ const BooksCreate = () => {
         // setInputs(tempInputs)
     }
 
+    const addBook = async () => {
+        try {
+            if (isValidInputs) {
+                let result =
+                    await axios.post('http://localhost:3000/api/book',
+                        inputs, {
+                        headers: {
+                            Authorization: getSession('token')
+                        }
+                    })
+                if (result.data) {
+                    setApiResult({
+                        success: result.data.success,
+                        message: result.data.msg
+                    })
+                    setInputs(initialState)
+                }
+            }
+        } catch (error) {
+            setApiResult({
+                success: false,
+                message: 'Invalid Inputs'
+            })
+            setInputs(initialState)
+        }
+
+    }
+
     return (
         <div>
+            <div style={{
+                color: apiResult ? apiResult.success ?
+                    '#00FF00' : '#FF0000' : '#000000'
+            }}>
+                {apiResult ? apiResult.message : ''}
+            </div>
             <div>Create Book</div>
             <div>ISBN :
             <input type='text'
@@ -70,7 +107,8 @@ const BooksCreate = () => {
                 </input>
             </div>
             <div>
-                <button disabled={!isValidInputs}>Create Book</button> {' '}
+                <button disabled={!isValidInputs}
+                    onClick={addBook}>Create Book</button> {' '}
                 <Link to='/books'>Books List</Link>
             </div>
         </div>

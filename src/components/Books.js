@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Link
+    Link,
+    useHistory
 } from "react-router-dom";
 import { connect } from 'react-redux';
 import { getSession } from '../helpers/sessionHelper';
+import signOut from '../helpers/signOutHelper';
 const axios = require('axios');
 
 const Books = (props) => {
-
+    const history = useHistory();
     const [apiResult, setApiResult] = useState([])
 
     useEffect(() => {
@@ -21,7 +23,9 @@ const Books = (props) => {
                     Authorization: getSession('token')
                 }
             })
-            setApiResult(result.data)
+            if (result.data) {
+                setApiResult(result.data)
+            }
         } catch (error) {
             console.log(error);
         }
@@ -60,7 +64,11 @@ const Books = (props) => {
 
     return (
         <div>
-            <div>Hi {props.username}</div>
+            <div>Hi {props.username} {' '}
+                <button onClick={() => signOut('token', history)}>
+                    SignOut
+                </button>
+            </div>
             <h1 id='title'>Books List</h1>
             <table id='books'>
                 <tbody>
