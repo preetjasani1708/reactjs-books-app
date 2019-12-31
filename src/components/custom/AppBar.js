@@ -11,12 +11,14 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import { Grid } from '@material-ui/core';
+import { connect } from 'react-redux';
+import signOut from '../../helpers/signOutHelper';
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 200;
 
@@ -70,6 +72,9 @@ const useStyles = makeStyles(theme => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
+    direction: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -78,10 +83,15 @@ const useStyles = makeStyles(theme => ({
     }),
     marginLeft: 0,
   },
+
 }));
 
+function ListItemLink(props) {
+  return <ListItem button component="a" {...props} />;
+}
 
-export default function ButtonAppBar(props) {
+const ButtonAppBar = (props) => {
+  const history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -113,9 +123,34 @@ export default function ButtonAppBar(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Persistent drawer
-          </Typography>
+          <Grid container
+            justify="space-between" alignItems="center">
+            <Grid item>
+              <Typography variant="h6" noWrap>
+                {props.name}
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <Grid container>
+                <Grid item>
+                  {props && props.username &&
+                    <Typography variant="h6" noWrap>
+                      Hi {props.username} {' '}
+                    </Typography>}
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="inherit"
+                    href={props.redirectOn}
+                    onClick={() => signOut('token', history)}
+                    variant="outlined">
+                    {props.signInOut}
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -134,26 +169,22 @@ export default function ButtonAppBar(props) {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts']
-            .map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon />
-                  : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon />
-                : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <Grid container
+          direction="column"
+          justify="space-between"
+        >
+          <List>
+            <ListItemLink href="/books">
+              <ListItemText primary="Book List" />
+            </ListItemLink>
+            <ListItemLink href="/books/create">
+              <ListItemText primary="Create Book" />
+            </ListItemLink>
+            <ListItemLink onClick={() => signOut('token', history)}>
+              <ListItemText primary="Sign Out" />
+            </ListItemLink>
+          </List>
+        </Grid>
       </Drawer>
       <main
         className={clsx(classes.content, {
@@ -163,6 +194,13 @@ export default function ButtonAppBar(props) {
         <div className={classes.drawerHeader} />
         {props.children}
       </main>
+
     </div>
   );
 }
+
+const mapStateToProps = state => ({
+  username: state.login.username
+})
+
+export default connect(mapStateToProps)(ButtonAppBar)

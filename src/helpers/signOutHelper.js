@@ -1,7 +1,7 @@
 import { getSession, removeSession } from './sessionHelper';
 const axios = require('axios');
 
-const signOut = async (key, history) => {
+const signOut = async (key, history, props) => {
     try {
         let result =
             await axios.delete('http://localhost:3000/api/signout', {
