@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { setSession } from '../helpers/sessionHelper';
 import { connect } from 'react-redux';
 import { isUserLogin } from '../actions';
+import ButtonAppBar from './custom/AppBar';
+import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+
 const axios = require('axios');
 
 const SignIn = (props) => {
@@ -14,6 +22,13 @@ const SignIn = (props) => {
         password: '',
     }
     const [inputs, setInputs] = useState(initialState);
+
+    //Component Did Mount
+    useEffect(
+        () => {
+            props.fireUserLogin('', '')
+        })
+
     useEffect(
         () => {
             if (inputs.username.length >= 6 &&
@@ -32,7 +47,7 @@ const SignIn = (props) => {
 
                 history.push('/books');
             }
-        }, [apiResult]
+        }, [apiResult, history]
     )
 
     const onHandleInputs = e => {
@@ -69,42 +84,97 @@ const SignIn = (props) => {
         }
     }
 
+    const useStyles = makeStyles(theme => ({
+        root: {
+            flexGrow: 1,
+        },
+
+        customPaper: {
+            padding: theme.spacing(2),
+            textAlign: 'center',
+            color: theme.palette.text.secondary,
+        },
+
+        customTypographySignIn: {
+            padding: theme.spacing(2),
+        },
+
+        customTypography: {
+            padding: theme.spacing(1),
+        },
+
+    }));
+    const classes = useStyles();
+
     return (
         <div>
-            <div style={{
-                color: apiResult ? apiResult.success ?
-                    '#00FF00' : '#FF0000' : '#000000'
-            }}>
-                {apiResult ? apiResult.message : ''}
-            </div>
-            <div>Sign In</div>
-            <div>Username :
-            <input type='text'
-                    name='username'
-                    value={inputs.username}
-                    placeholder='Enter Username'
-                    onChange={onHandleInputs}
-                />
-            </div>
-            <div>Password :
-            <input type='password'
-                    name='password'
-                    value={inputs.password}
-                    placeholder='Enter Password'
-                    onChange={onHandleInputs}
-                /></div>
-            <div>
-                <button disabled={!isInputs}
-                    onClick={onLoginClick} >
-                    Log In
-                </button>
-            </div>
-            <div>Don't have account ? {' '}
-                <Link to='/register'>
-                    SignUp
-                </Link>
-            </div>
-
+            <ButtonAppBar name='Sign In'
+                signInOut='Sign Up'
+                redirectOn='/register'>
+                <Grid container spacing={3}
+                    direction="row"
+                    justify="center"
+                    alignItems="center">
+                    <Grid item xs={12}>
+                        <Paper className={classes.customPaper}>
+                            <Typography variant="h6"
+                                className={classes.customTypography}
+                                style={{
+                                    color: apiResult ? apiResult.success ?
+                                        '#00FF00' : '#FF0000' : '#000000'
+                                }}>
+                                {apiResult ? apiResult.message : ''}
+                            </Typography>
+                            <Typography variant="h4"
+                                className={classes.customTypographySignIn}>
+                                Sign In
+                            </Typography>
+                            <Typography variant="h5"
+                                className={classes.customTypography}>
+                                Username : {' '}
+                                <TextField id="outlined-basic"
+                                    type='text'
+                                    label="Enter Username"
+                                    variant="outlined"
+                                    name='username'
+                                    value={inputs.username}
+                                    onChange={onHandleInputs}
+                                    size='small'
+                                />
+                            </Typography>
+                            <Typography variant="h5"
+                                className={classes.customTypography}>
+                                Password : {' '}
+                                <TextField id="outlined-basic"
+                                    type='password'
+                                    label="Enter Password"
+                                    variant="outlined"
+                                    name='password'
+                                    value={inputs.password}
+                                    onChange={onHandleInputs}
+                                    size='small'
+                                />
+                            </Typography>
+                            <Typography className={classes.customTypography}>
+                                <Button variant="outlined"
+                                    disabled={!isInputs}
+                                    onClick={onLoginClick}
+                                    color="primary">
+                                    Sign In
+                                </Button>
+                            </Typography>
+                            <Typography variant="h6"
+                                className={classes.customTypography}>
+                                Don't have account ? {' '}
+                                <Button color="primary"
+                                    href='/register'>
+                                    Sign Up
+                                </Button>
+                            </Typography>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </ButtonAppBar>
         </div>
     );
 }
